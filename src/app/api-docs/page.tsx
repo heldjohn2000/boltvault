@@ -99,10 +99,8 @@ X-API-Key: your-api-key-here`}</pre>
       "description": "Socket Head Cap Screw M6x16 Stainless Steel",
       "material": "Steel",
       "thread_spec": "M6",
-      "price_unit": 0.45,
-      "price_carton": 18.00,
-      "carton_qty": 50,
-      "stock_qty": 10000
+      "retail_price": 0.45,
+      "pack_quantity": 50
     }
   ],
   "pagination": {
@@ -178,14 +176,14 @@ Body:
     {
       "part_number": "FC1600",
       "quantity": 100,
-      "price_unit": 0.45,
-      "subtotal": 45.00
+      "retail_price": 0.45,
+      "total_price": 45.00
     },
     {
       "part_number": "WA2000",
       "quantity": 50,
-      "price_unit": 0.45,
-      "subtotal": 22.50
+      "retail_price": 0.45,
+      "total_price": 22.50
     }
   ]
 }`}</pre>
@@ -200,52 +198,9 @@ Body:
           <h2 className="text-2xl font-bold text-slate-100 mb-8">Code Examples</h2>
 
           <div className="space-y-8">
-            {/* Python Example */}
+            {/* JavaScript/TypeScript Example */}
             <div>
-              <h3 className="text-lg font-bold text-amber-400 mb-3">Python</h3>
-              <div className="bg-slate-700 rounded p-4 overflow-x-auto">
-                <pre className="text-sm text-slate-300 font-mono">{`import requests
-
-api_key = "your-api-key-here"
-headers = {"X-API-Key": api_key}
-
-# Get products
-response = requests.get(
-    "https://boltvault.com/api/products",
-    params={"search": "socket", "limit": 10},
-    headers=headers
-)
-products = response.json()
-
-# Create order
-order_data = {
-    "items": [
-        {"part_number": "FC1600", "quantity": 100}
-    ],
-    "shipping": {
-        "email": "orders@acme.com",
-        "phone": "+1-555-1234",
-        "companyName": "ACME Corp",
-        "street": "123 Industrial Blvd",
-        "city": "Boston",
-        "state": "MA",
-        "zip": "02101",
-        "country": "USA"
-    }
-}
-
-response = requests.post(
-    "https://boltvault.com/api/orders",
-    json=order_data,
-    headers=headers
-)
-order = response.json()`}</pre>
-              </div>
-            </div>
-
-            {/* JavaScript Example */}
-            <div>
-              <h3 className="text-lg font-bold text-amber-400 mb-3">JavaScript</h3>
+              <h3 className="text-lg font-bold text-amber-400 mb-3">JavaScript/TypeScript</h3>
               <div className="bg-slate-700 rounded p-4 overflow-x-auto">
                 <pre className="text-sm text-slate-300 font-mono">{`const apiKey = "your-api-key-here";
 
@@ -315,10 +270,50 @@ curl -X POST \\
   }'`}</pre>
               </div>
             </div>
+
+            {/* Python Example */}
+            <div>
+              <h3 className="text-lg font-bold text-amber-400 mb-3">Python</h3>
+              <div className="bg-slate-700 rounded p-4 overflow-x-auto">
+                <pre className="text-sm text-slate-300 font-mono">{`import requests
+
+api_key = "your-api-key-here"
+headers = {"X-API-Key": api_key}
+
+# Get products
+response = requests.get(
+  "https://boltvault.com/api/products?search=socket&limit=10",
+  headers=headers
+)
+products = response.json()
+
+# Create order
+order_data = {
+  "items": [{"part_number": "FC1600", "quantity": 100}],
+  "shipping": {
+    "email": "orders@acme.com",
+    "phone": "+1-555-1234",
+    "companyName": "ACME Corp",
+    "street": "123 Industrial Blvd",
+    "city": "Boston",
+    "state": "MA",
+    "zip": "02101",
+    "country": "USA"
+  }
+}
+
+response = requests.post(
+  "https://boltvault.com/api/orders",
+  headers=headers,
+  json=order_data
+)
+order = response.json()`}</pre>
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Error Codes Section */}
+        {/* Error Handling Section */}
         <div className="card">
           <h2 className="text-2xl font-bold text-slate-100 mb-6">Error Responses</h2>
           <div className="space-y-4">
@@ -343,11 +338,11 @@ curl -X POST \\
                 <p className="text-slate-400 text-sm">Product or resource not found</p>
               </div>
             </div>
-            <div className="flex gap-4">
+            <div className="flex gap-4 pb-4">
               <div className="font-mono text-red-400 font-bold flex-shrink-0">500</div>
               <div>
-                <p className="font-bold text-slate-100">Server Error</p>
-                <p className="text-slate-400 text-sm">Unexpected server error. Contact support if this persists.</p>
+                <p className="font-bold text-slate-100">Internal Server Error</p>
+                <p className="text-slate-400 text-sm">Server-side error processing your request</p>
               </div>
             </div>
           </div>

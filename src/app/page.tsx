@@ -148,8 +148,7 @@ export default async function HomePage() {
     {
       "part_number": "FC1600",
       "description": "Socket Head Cap Screw",
-      "price_unit": 0.45,
-      "stock_qty": 10000
+      "retail_price": 0.45
     }
   ]
 }`}</pre>

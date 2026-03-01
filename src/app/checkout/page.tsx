@@ -238,7 +238,7 @@ export default function CheckoutPage() {
                       {item.part_number} x {item.quantity}
                     </span>
                     <span className="text-slate-100">
-                      ${(item.price_unit * item.quantity).toFixed(2)}
+                      ${(item.retail_price * item.quantity).toFixed(2)}
                     </span>
                   </div>
                 ))}

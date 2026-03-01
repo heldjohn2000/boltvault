@@ -102,9 +102,10 @@ export function generateInvoicePDF(data: InvoiceData): Buffer {
     customer.company_name || 'Customer',
     customer.email,
     customer.phone || '',
-    `${order.shipping_address.street}`,
-    `${order.shipping_address.city}, ${order.shipping_address.state} ${order.shipping_address.zip}`,
-    order.shipping_address.country,
+    order.shipping_address1 || '',
+    order.shipping_address2 || '',
+    `${order.shipping_city}, ${order.shipping_state} ${order.shipping_zip}`,
+    order.shipping_country,
   ].filter(Boolean)
 
   shippingLines.forEach((line) => {
@@ -152,8 +153,8 @@ export function generateInvoicePDF(data: InvoiceData): Buffer {
   items.forEach((item) => {
     const qtyStr = item.quantity.toString()
     const itemNumStr = item.part_number
-    const priceStr = `$${item.price_unit.toFixed(2)}`
-    const totalStr = `$${item.subtotal.toFixed(2)}`
+    const priceStr = `$${item.unit_price.toFixed(2)}`
+    const totalStr = `$${item.total_price.toFixed(2)}`
 
     doc.setFontSize(10)
     doc.text(qtyStr, col1X, yPosition)
@@ -174,10 +175,9 @@ export function generateInvoicePDF(data: InvoiceData): Buffer {
       const specs = []
       if (item.product.material) specs.push(`Material: ${item.product.material}`)
       if (item.product.thread_spec) specs.push(`Thread: ${item.product.thread_spec}`)
-      if (item.product.diameter_inches)
-        specs.push(`Dia: ${item.product.diameter_inches}"`)
-      if (item.product.length_inches) specs.push(`Len: ${item.product.length_inches}"`)
-      if (item.product.finish) specs.push(`Finish: ${item.product.finish}`)
+      if (item.product.diameter)
+        specs.push(`Dia: ${item.product.diameter}"`)
+      if (item.product.length) specs.push(`Len: ${item.product.length}"`)
 
       if (specs.length > 0) {
         doc.setFontSize(8)

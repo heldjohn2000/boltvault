@@ -1,6 +1,6 @@
 import { createServiceClient } from '@/lib/supabase'
 import { generateInvoicePDF } from '@/lib/generate-invoice'
-import { Order, OrderItem, Customer, Product } from '@/lib/types'
+import { OrderItem, Product } from '@/lib/types'
 
 export const runtime = 'nodejs'
 
@@ -12,10 +12,7 @@ export async function GET(
     const { id } = await params
 
     if (!id) {
-      return new Response(JSON.stringify({ error: 'Order ID is required' }), {
-        status: 400,
-        headers: { 'Content-Type': 'application/json' },
-      })
+      return Response.json({ error: 'Order ID is required' }, { status: 400 })
     }
 
     const supabaseAdmin = createServiceClient()
@@ -28,10 +25,7 @@ export async function GET(
       .single()
 
     if (orderError || !order) {
-      return new Response(JSON.stringify({ error: 'Order not found' }), {
-        status: 404,
-        headers: { 'Content-Type': 'application/json' },
-      })
+      return Response.json({ error: 'Order not found' }, { status: 404 })
     }
 
     // Fetch customer
@@ -42,62 +36,54 @@ export async function GET(
       .single()
 
     if (customerError || !customer) {
-      return new Response(JSON.stringify({ error: 'Customer not found' }), {
-        status: 404,
-        headers: { 'Content-Type': 'application/json' },
-      })
+      return Response.json({ error: 'Customer not found' }, { status: 404 })
     }
 
     // Fetch order items with product details
     const { data: orderItems, error: itemsError } = await supabaseAdmin
       .from('order_items')
-      .select('*, products:product_id(id, part_number, description, material, thread_spec, diameter_inches, length_inches, finish, price_unit)')
+      .select('*, products:product_id(id, part_number, description, material, thread_spec, length, diameter)')
       .eq('order_id', id)
 
     if (itemsError) {
-      return new Response(JSON.stringify({ error: 'Failed to fetch order items' }), {
-        status: 500,
-        headers: { 'Content-Type': 'application/json' },
-      })
+      return Response.json({ error: 'Failed to fetch order items' }, { status: 500 })
     }
 
-    // Transform items to include product data
     const itemsWithProducts = (orderItems || []).map((item: any) => ({
-      ...item,
-      product: item.products,
-    }))
+      id: item.id,
+      order_id: item.order_id,
+      product_id: item.product_id,
+      part_number: item.part_number,
+      description: item.description,
+      quantity: item.quantity,
+      unit_price: item.unit_price,
+      total_price: item.total_price,
+      created_at: item.created_at,
+      product: item.products as Product | undefined,
+    } as OrderItem & { product?: Product }))
 
     // Generate PDF
     const pdfBuffer = generateInvoicePDF({
-      order: order as Order,
-      customer: customer as Customer,
+      order,
+      customer,
       items: itemsWithProducts,
     })
 
-    // Convert buffer to Uint8Array for Response
     const pdfData = new Uint8Array(pdfBuffer)
 
-    // Return PDF response
     return new Response(pdfData, {
       status: 200,
       headers: {
         'Content-Type': 'application/pdf',
-        'Content-Disposition': `attachment; filename="invoice-${id}.pdf"`,
+        'Content-Disposition': `attachment; filename="BoltVault-Order-${order.order_number}.pdf"`,
         'Cache-Control': 'no-cache, no-store, must-revalidate',
-        'Pragma': 'no-cache',
-        'Expires': '0',
       },
     })
   } catch (error) {
     console.error('Invoice generation error:', error)
-    return new Response(
-      JSON.stringify({
-        error: error instanceof Error ? error.message : 'Unknown error',
-      }),
-      {
-        status: 500,
-        headers: { 'Content-Type': 'application/json' },
-      }
+    return Response.json(
+      { error: error instanceof Error ? error.message : 'Invoice generation failed' },
+      { status: 500 }
     )
   }
 }

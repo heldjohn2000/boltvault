@@ -57,7 +57,7 @@ export default function CartPage() {
                         />
                       </div>
                       <span className="text-slate-400 text-sm">
-                        ${(item.price_unit * item.quantity).toFixed(2)}
+                        ${(item.retail_price * item.quantity).toFixed(2)}
                       </span>
                     </div>
                   </div>

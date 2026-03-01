@@ -77,7 +77,7 @@ export default function ProductDetailPage() {
         product_id: product.id,
         part_number: product.part_number,
         description: product.description,
-        price_unit: product.price_unit,
+        retail_price: product.retail_price,
         material: product.material,
         thread_spec: product.thread_spec,
         quantity: 0,
@@ -119,22 +119,18 @@ export default function ProductDetailPage() {
                   <span className="text-slate-400">Thread Spec</span>
                   <span className="text-slate-100">{product.thread_spec || 'Standard'}</span>
                 </div>
-                {product.diameter_inches && (
+                {product.diameter && (
                   <div className="flex justify-between py-2 border-b border-slate-700">
                     <span className="text-slate-400">Diameter</span>
-                    <span className="text-slate-100">{product.diameter_inches}"</span>
+                    <span className="text-slate-100">{product.diameter}"</span>
                   </div>
                 )}
-                {product.length_inches && (
+                {product.length && (
                   <div className="flex justify-between py-2 border-b border-slate-700">
                     <span className="text-slate-400">Length</span>
-                    <span className="text-slate-100">{product.length_inches}"</span>
+                    <span className="text-slate-100">{product.length}"</span>
                   </div>
                 )}
-                <div className="flex justify-between py-2">
-                  <span className="text-slate-400">Finish</span>
-                  <span className="text-slate-100">{product.finish || 'Standard'}</span>
-                </div>
               </div>
             </div>
 
@@ -144,19 +140,9 @@ export default function ProductDetailPage() {
                 <div className="flex justify-between items-center py-2 border-b border-slate-700">
                   <span className="text-slate-400">Unit Price</span>
                   <span className="text-2xl font-bold text-amber-400">
-                    ${product.price_unit.toFixed(2)}
+                    ${product.retail_price.toFixed(2)}
                   </span>
                 </div>
-                {product.price_carton > 0 && (
-                  <div className="flex justify-between items-center py-2">
-                    <span className="text-slate-400">
-                      Carton Price ({product.carton_qty} units)
-                    </span>
-                    <span className="text-xl font-bold text-amber-300">
-                      ${product.price_carton.toFixed(2)}
-                    </span>
-                  </div>
-                )}
               </div>
             </div>
 
@@ -176,20 +162,13 @@ export default function ProductDetailPage() {
                 <button
                   onClick={handleAddToCart}
                   className="btn btn-primary px-8 py-3 text-lg flex-grow"
-                  disabled={product.stock_qty === 0}
                 >
-                  {product.stock_qty === 0 ? 'Out of Stock' : 'Add to Cart'}
+                  Add to Cart
                 </button>
                 <Link href="/cart" className="btn btn-secondary px-6 py-3">
                   View Cart
                 </Link>
               </div>
-
-              {product.stock_qty > 0 && (
-                <p className="text-sm text-slate-400">
-                  {product.stock_qty} in stock
-                </p>
-              )}
             </div>
           </div>
         </div>
@@ -212,7 +191,7 @@ export default function ProductDetailPage() {
                   </p>
                   <div className="flex items-center justify-between pt-3 border-t border-slate-700">
                     <span className="text-amber-400 font-bold">
-                      ${relProduct.price_unit.toFixed(2)}
+                      ${relProduct.retail_price.toFixed(2)}
                     </span>
                   </div>
                 </Link>

@@ -12,8 +12,7 @@ interface Product {
   description: string
   material: string
   thread_spec: string
-  price_unit: number
-  stock_qty: number
+  retail_price: number
 }
 
 interface PaginationInfo {
@@ -122,7 +121,7 @@ function ProductsContent() {
         product_id: product.id,
         part_number: product.part_number,
         description: product.description,
-        price_unit: product.price_unit,
+        retail_price: product.retail_price,
         material: product.material,
         thread_spec: product.thread_spec,
         quantity: 0,
@@ -257,7 +256,7 @@ function ProductsContent() {
 
                       <div className="flex items-center justify-between pt-3 border-t border-slate-700">
                         <span className="text-lg font-bold text-amber-400">
-                          ${product.price_unit.toFixed(2)}
+                          ${product.retail_price.toFixed(2)}
                         </span>
                         <button
                           onClick={() => handleAddToCart(product)}
@@ -266,10 +265,6 @@ function ProductsContent() {
                           Add
                         </button>
                       </div>
-
-                      {product.stock_qty === 0 && (
-                        <p className="text-xs text-red-400 mt-2">Out of Stock</p>
-                      )}
                     </div>
                   ))}
                 </div>

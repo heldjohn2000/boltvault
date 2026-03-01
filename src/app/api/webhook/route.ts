@@ -1,9 +1,11 @@
 import { createServiceClient } from '@/lib/supabase'
 import Stripe from 'stripe'
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
-  apiVersion: '2026-02-25.clover',
-})
+function getStripe() {
+  return new Stripe(process.env.STRIPE_SECRET_KEY!, {
+    apiVersion: '2026-02-25.clover',
+  })
+}
 
 export async function POST(request: Request) {
   const body = await request.text()
@@ -13,6 +15,7 @@ export async function POST(request: Request) {
     return Response.json({ error: 'No signature' }, { status: 400 })
   }
 
+  const stripe = getStripe()
   let event: Stripe.Event
 
   try {
@@ -21,7 +24,7 @@ export async function POST(request: Request) {
       sig,
       process.env.STRIPE_WEBHOOK_SECRET || ''
     )
-  } catch (err) {
+  } catch {
     return Response.json({ error: 'Webhook signature verification failed' }, { status: 400 })
   }
 
@@ -30,21 +33,16 @@ export async function POST(request: Request) {
   try {
     if (event.type === 'checkout.session.completed') {
       const session = event.data.object as Stripe.Checkout.Session
+      const orderId = session.metadata?.order_id
 
-      // Find order by Stripe session ID
-      const { data: orders } = await supabaseAdmin
-        .from('orders')
-        .select('*')
-        .eq('stripe_session_id', session.id)
-
-      if (orders && orders.length > 0) {
-        const order = orders[0]
-
-        // Update order status to paid
+      if (orderId) {
         await supabaseAdmin
           .from('orders')
-          .update({ status: 'paid' })
-          .eq('id', order.id)
+          .update({
+            status: 'paid',
+            stripe_payment_intent_id: session.payment_intent as string,
+          })
+          .eq('id', orderId)
       }
     }
   } catch (error) {

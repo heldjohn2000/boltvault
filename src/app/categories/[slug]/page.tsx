@@ -143,11 +143,8 @@ export default function CategoryPage() {
                           </p>
                           <div className="flex items-center justify-between">
                             <span className="text-amber-400 font-bold">
-                              ${product.price_unit.toFixed(2)}
+                              ${product.retail_price.toFixed(2)}
                             </span>
-                            {product.stock_qty === 0 && (
-                              <span className="text-xs text-red-400">Out of Stock</span>
-                            )}
                           </div>
                         </Link>
                       ))}

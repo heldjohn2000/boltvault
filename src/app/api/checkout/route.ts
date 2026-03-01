@@ -1,24 +1,29 @@
 import { createServiceClient } from '@/lib/supabase'
 import Stripe from 'stripe'
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
-  apiVersion: '2026-02-25.clover',
-})
+function getStripe() {
+  return new Stripe(process.env.STRIPE_SECRET_KEY!, {
+    apiVersion: '2026-02-25.clover',
+  })
+}
+
+interface CheckoutItem {
+  product_id: string
+  part_number: string
+  description: string
+  quantity: number
+  retail_price: number
+}
 
 interface CheckoutRequest {
-  items: Array<{
-    id: string
-    product_id: string
-    part_number: string
-    description: string
-    quantity: number
-    price_unit: number
-  }>
+  items: CheckoutItem[]
   shipping: {
     email: string
     phone: string
+    name: string
     companyName: string
     street: string
+    street2?: string
     city: string
     state: string
     zip: string
@@ -37,136 +42,162 @@ export async function POST(request: Request) {
     const supabaseAdmin = createServiceClient()
 
     // Verify products and prices
-    const productIds = body.items.map((item) => item.product_id)
+    const partNumbers = body.items.map((item) => item.part_number)
     const { data: products, error: prodError } = await supabaseAdmin
       .from('products')
-      .select('id, price_unit, part_number')
-      .in('id', productIds)
+      .select('id, retail_price, part_number, description')
+      .in('part_number', partNumbers)
 
-    if (prodError) {
+    if (prodError || !products) {
       return Response.json({ error: 'Failed to verify products' }, { status: 400 })
     }
 
-    // Verify prices match
-    for (const item of body.items) {
-      const product = products?.find((p: any) => p.id === item.product_id)
-      if (!product) {
-        return Response.json(
-          { error: `Product ${item.part_number} not found` },
-          { status: 400 }
-        )
-      }
-      if (product.price_unit !== item.price_unit) {
-        return Response.json(
-          { error: `Price mismatch for ${item.part_number}` },
-          { status: 400 }
-        )
-      }
-    }
+    // Calculate subtotal from verified prices
+    const subtotal = body.items.reduce((sum, item) => {
+      const product = products.find((p: { part_number: string }) => p.part_number === item.part_number)
+      if (!product) return sum
+      return sum + Number(product.retail_price) * item.quantity
+    }, 0)
 
-    const subtotal = body.items.reduce(
-      (sum, item) => sum + item.price_unit * item.quantity,
-      0
-    )
-
-    // Create customer in Supabase
-    const { data: customer, error: custError } = await supabaseAdmin
+    // Create or find customer
+    const { data: existingCustomer } = await supabaseAdmin
       .from('customers')
-      .insert([
-        {
+      .select('id')
+      .eq('email', body.shipping.email)
+      .maybeSingle()
+
+    let customerId: string
+
+    if (existingCustomer) {
+      customerId = existingCustomer.id
+    } else {
+      const { data: newCustomer, error: custError } = await supabaseAdmin
+        .from('customers')
+        .insert({
           email: body.shipping.email,
           phone: body.shipping.phone,
+          contact_name: body.shipping.name,
           company_name: body.shipping.companyName,
-        },
-      ])
-      .select()
-      .single()
+          address_line1: body.shipping.street,
+          address_line2: body.shipping.street2 || null,
+          city: body.shipping.city,
+          state: body.shipping.state,
+          zip: body.shipping.zip,
+          country: body.shipping.country || 'US',
+        })
+        .select('id')
+        .single()
 
-    if (custError) {
-      return Response.json({ error: 'Failed to create customer' }, { status: 500 })
+      if (custError || !newCustomer) {
+        return Response.json({ error: 'Failed to create customer' }, { status: 500 })
+      }
+      customerId = newCustomer.id
     }
 
-    // Create order in Supabase
-    const shippingCost = 15.0
-    const tax = (subtotal + shippingCost) * 0.08
-    const total = subtotal + shippingCost + tax
+    // Create order
+    const shippingCost = subtotal >= 99 ? 0 : 15.0
+    const total = subtotal + shippingCost
 
     const { data: order, error: orderError } = await supabaseAdmin
       .from('orders')
-      .insert([
-        {
-          customer_id: customer.id,
-          status: 'pending',
-          subtotal,
-          shipping_cost: shippingCost,
-          tax,
-          total,
-          shipping_address: {
-            street: body.shipping.street,
-            city: body.shipping.city,
-            state: body.shipping.state,
-            zip: body.shipping.zip,
-            country: body.shipping.country,
-          },
-        },
-      ])
-      .select()
+      .insert({
+        customer_id: customerId,
+        status: 'pending',
+        subtotal: subtotal.toFixed(2),
+        shipping_cost: shippingCost.toFixed(2),
+        tax: '0.00',
+        total: total.toFixed(2),
+        shipping_method: 'UPS Ground',
+        shipping_name: body.shipping.name,
+        shipping_company: body.shipping.companyName,
+        shipping_address1: body.shipping.street,
+        shipping_address2: body.shipping.street2 || null,
+        shipping_city: body.shipping.city,
+        shipping_state: body.shipping.state,
+        shipping_zip: body.shipping.zip,
+        shipping_country: body.shipping.country || 'US',
+      })
+      .select('id, order_number')
       .single()
 
-    if (orderError) {
+    if (orderError || !order) {
       return Response.json({ error: 'Failed to create order' }, { status: 500 })
     }
 
-    // Create Stripe session
+    // Create order items
+    const orderItems = body.items.map((item) => {
+      const product = products.find((p: { part_number: string }) => p.part_number === item.part_number)
+      const unitPrice = product ? Number(product.retail_price) : item.retail_price
+      return {
+        order_id: order.id,
+        product_id: product?.id || null,
+        part_number: item.part_number,
+        description: item.description,
+        quantity: item.quantity,
+        unit_price: unitPrice,
+        total_price: (unitPrice * item.quantity).toFixed(2),
+      }
+    })
+
+    await supabaseAdmin.from('order_items').insert(orderItems)
+
+    // Create Stripe checkout session
+    const stripe = getStripe()
     const session = await stripe.checkout.sessions.create({
       customer_email: body.shipping.email,
       mode: 'payment',
       payment_method_types: ['card'],
-      success_url: `${process.env.NEXT_PUBLIC_SITE_URL}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/cart`,
-      line_items: body.items.map((item) => ({
-        price_data: {
-          currency: 'usd',
-          product_data: {
-            name: item.part_number,
-            description: item.description,
-          },
-          unit_amount: Math.round(item.price_unit * 100),
-        },
-        quantity: item.quantity,
-      })),
-      shipping_options: [
-        {
-          shipping_rate_data: {
-            type: 'fixed_amount',
-            fixed_amount: {
-              amount: 1500,
-              currency: 'usd',
+      metadata: {
+        order_id: order.id,
+        order_number: String(order.order_number),
+      },
+      success_url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://boltvault.vercel.app'}/checkout/success?order_id=${order.id}`,
+      cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://boltvault.vercel.app'}/cart`,
+      line_items: body.items.map((item) => {
+        const product = products.find((p: { part_number: string }) => p.part_number === item.part_number)
+        const unitPrice = product ? Number(product.retail_price) : item.retail_price
+        return {
+          price_data: {
+            currency: 'usd',
+            product_data: {
+              name: item.part_number,
+              description: item.description,
             },
-            display_name: 'Standard Shipping (5-7 days)',
+            unit_amount: Math.round(unitPrice * 100),
           },
-        },
-      ],
+          quantity: item.quantity,
+        }
+      }),
+      ...(shippingCost > 0
+        ? {
+            shipping_options: [
+              {
+                shipping_rate_data: {
+                  type: 'fixed_amount' as const,
+                  fixed_amount: { amount: Math.round(shippingCost * 100), currency: 'usd' },
+                  display_name: 'UPS Ground (5-7 business days)',
+                },
+              },
+            ],
+          }
+        : {}),
     })
-
-    if (!session.url) {
-      return Response.json({ error: 'Failed to create checkout URL' }, { status: 500 })
-    }
 
     // Update order with Stripe session ID
     await supabaseAdmin
       .from('orders')
-      .update({ stripe_session_id: session.id })
+      .update({ stripe_checkout_session_id: session.id })
       .eq('id', order.id)
 
     return Response.json({
       checkoutUrl: session.url,
       orderId: order.id,
+      orderNumber: order.order_number,
     })
   } catch (error) {
     console.error('Checkout error:', error)
     return Response.json(
-      { error: error instanceof Error ? error.message : 'Unknown error' },
+      { error: error instanceof Error ? error.message : 'Checkout failed' },
       { status: 500 }
     )
   }
