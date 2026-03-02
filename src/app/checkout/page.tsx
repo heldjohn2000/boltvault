@@ -80,11 +80,11 @@ export default function CheckoutPage() {
 
   if (items.length === 0) {
     return (
-      <div className="bg-slate-900 min-h-screen py-12">
+      <div className="min-h-screen py-12">
         <div className="max-w-4xl mx-auto px-4">
-          <h1 className="text-3xl font-bold text-slate-100 mb-8">Checkout</h1>
+          <h1 className="text-3xl font-semibold text-gray-900 mb-8">Checkout</h1>
           <div className="card text-center py-12">
-            <p className="text-slate-400 mb-6">Your cart is empty</p>
+            <p className="text-gray-400 mb-6">Your cart is empty</p>
             <Link href="/products" className="btn btn-primary">
               Continue Shopping
             </Link>
@@ -95,22 +95,22 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="bg-slate-900 min-h-screen py-8">
+    <div className="min-h-screen py-8">
       <div className="max-w-7xl mx-auto px-4">
-        <h1 className="text-3xl font-bold text-slate-100 mb-8">Checkout</h1>
+        <h1 className="text-3xl font-semibold text-gray-900 mb-8">Checkout</h1>
 
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Checkout Form */}
           <form onSubmit={handleCheckout} className="lg:col-span-2 space-y-6">
             {error && (
-              <div className="card bg-red-500/20 border-red-500">
-                <p className="text-red-400">{error}</p>
+              <div className="card bg-red-50 border-red-200">
+                <p className="text-red-600">{error}</p>
               </div>
             )}
 
             {/* Contact Information */}
             <div className="card">
-              <h2 className="text-xl font-bold text-slate-100 mb-4">Contact Information</h2>
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">Contact Information</h2>
               <div className="space-y-4">
                 <input
                   type="email"
@@ -143,7 +143,7 @@ export default function CheckoutPage() {
 
             {/* Shipping Address */}
             <div className="card">
-              <h2 className="text-xl font-bold text-slate-100 mb-4">Shipping Address</h2>
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">Shipping Address</h2>
               <div className="space-y-4">
                 <input
                   type="text"
@@ -200,19 +200,19 @@ export default function CheckoutPage() {
 
             {/* Shipping Method */}
             <div className="card">
-              <h2 className="text-xl font-bold text-slate-100 mb-4">Shipping Method</h2>
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">Shipping Method</h2>
               <div className="space-y-3">
-                <label className="flex items-center space-x-3 cursor-pointer">
-                  <input type="radio" name="shipping" value="standard" defaultChecked />
-                  <span className="text-slate-300">Standard Shipping (5-7 days) - $15.00</span>
+                <label className="flex items-center space-x-3 cursor-pointer p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                  <input type="radio" name="shipping" value="standard" defaultChecked className="text-blue-600 focus:ring-blue-500" />
+                  <span className="text-gray-700">Standard Shipping (5-7 days) - $15.00</span>
                 </label>
-                <label className="flex items-center space-x-3 cursor-pointer">
-                  <input type="radio" name="shipping" value="express" />
-                  <span className="text-slate-300">Express Shipping (2-3 days) - $45.00</span>
+                <label className="flex items-center space-x-3 cursor-pointer p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                  <input type="radio" name="shipping" value="express" className="text-blue-600 focus:ring-blue-500" />
+                  <span className="text-gray-700">Express Shipping (2-3 days) - $45.00</span>
                 </label>
-                <label className="flex items-center space-x-3 cursor-pointer">
-                  <input type="radio" name="shipping" value="overnight" />
-                  <span className="text-slate-300">Overnight Shipping - $95.00</span>
+                <label className="flex items-center space-x-3 cursor-pointer p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                  <input type="radio" name="shipping" value="overnight" className="text-blue-600 focus:ring-blue-500" />
+                  <span className="text-gray-700">Overnight Shipping - $95.00</span>
                 </label>
               </div>
             </div>
@@ -220,7 +220,7 @@ export default function CheckoutPage() {
             <button
               type="submit"
               disabled={loading}
-              className="btn btn-primary w-full py-3 text-lg"
+              className="btn btn-primary w-full py-3 text-base disabled:opacity-50"
             >
               {loading ? 'Processing...' : 'Pay with Stripe'}
             </button>
@@ -229,37 +229,37 @@ export default function CheckoutPage() {
           {/* Order Summary */}
           <div className="lg:col-span-1">
             <div className="card sticky top-20">
-              <h2 className="text-xl font-bold text-slate-100 mb-6">Order Summary</h2>
+              <h2 className="text-xl font-semibold text-gray-900 mb-6">Order Summary</h2>
 
-              <div className="space-y-3 mb-6 pb-6 border-b border-slate-700 max-h-64 overflow-y-auto">
+              <div className="space-y-3 mb-6 pb-6 border-b border-gray-200 max-h-64 overflow-y-auto">
                 {items.map((item) => (
                   <div key={item.id} className="flex justify-between text-sm">
-                    <span className="text-slate-400">
+                    <span className="text-gray-500">
                       {item.part_number} x {item.quantity}
                     </span>
-                    <span className="text-slate-100">
+                    <span className="text-gray-900">
                       ${(item.retail_price * item.quantity).toFixed(2)}
                     </span>
                   </div>
                 ))}
               </div>
 
-              <div className="space-y-2 mb-6 pb-6 border-b border-slate-700">
-                <div className="flex justify-between text-slate-300">
+              <div className="space-y-2 mb-6 pb-6 border-b border-gray-200">
+                <div className="flex justify-between text-gray-600">
                   <span>Subtotal</span>
                   <span>${subtotal.toFixed(2)}</span>
                 </div>
-                <div className="flex justify-between text-slate-300">
+                <div className="flex justify-between text-gray-600">
                   <span>Shipping</span>
                   <span>${shipping.toFixed(2)}</span>
                 </div>
-                <div className="flex justify-between text-slate-300">
+                <div className="flex justify-between text-gray-600">
                   <span>Tax</span>
                   <span>${tax.toFixed(2)}</span>
                 </div>
               </div>
 
-              <div className="flex justify-between text-xl font-bold text-amber-400">
+              <div className="flex justify-between text-xl font-bold text-gray-900">
                 <span>Total</span>
                 <span>${total.toFixed(2)}</span>
               </div>

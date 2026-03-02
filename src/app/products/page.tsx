@@ -131,7 +131,7 @@ function ProductsContent() {
   }
 
   return (
-    <div className="bg-slate-900 min-h-screen py-8">
+    <div className="min-h-screen py-8">
       <div className="max-w-7xl mx-auto px-4">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Sidebar Filters */}
@@ -139,7 +139,7 @@ function ProductsContent() {
             <div className="sticky top-20 space-y-6">
               {/* Search */}
               <div>
-                <h3 className="font-bold text-slate-100 mb-3">Search</h3>
+                <h3 className="font-semibold text-gray-900 mb-3 text-sm">Search</h3>
                 <input
                   type="text"
                   placeholder="Part number or description"
@@ -160,7 +160,7 @@ function ProductsContent() {
 
               {/* Material Filter */}
               <div>
-                <h3 className="font-bold text-slate-100 mb-3">Material</h3>
+                <h3 className="font-semibold text-gray-900 mb-3 text-sm">Material</h3>
                 <div className="space-y-2">
                   {materials.map((mat) => (
                     <label key={mat} className="flex items-center space-x-2 cursor-pointer">
@@ -177,9 +177,9 @@ function ProductsContent() {
                           params.set('page', '1')
                           window.history.pushState(null, '', `?${params.toString()}`)
                         }}
-                        className="rounded"
+                        className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                       />
-                      <span className="text-slate-300 text-sm">{mat}</span>
+                      <span className="text-gray-600 text-sm">{mat}</span>
                     </label>
                   ))}
                 </div>
@@ -187,7 +187,7 @@ function ProductsContent() {
 
               {/* Thread Spec Filter */}
               <div>
-                <h3 className="font-bold text-slate-100 mb-3">Thread Spec</h3>
+                <h3 className="font-semibold text-gray-900 mb-3 text-sm">Thread Spec</h3>
                 <input
                   type="text"
                   placeholder="e.g., M6, #10-24"
@@ -220,42 +220,42 @@ function ProductsContent() {
           <main className="lg:col-span-3">
             {/* Results Header */}
             <div className="mb-6">
-              <h1 className="text-3xl font-bold text-slate-100 mb-2">Products</h1>
-              <p className="text-slate-400">
+              <h1 className="text-3xl font-semibold text-gray-900 mb-2">Products</h1>
+              <p className="text-gray-500">
                 {loading ? 'Loading...' : `${pagination.total} products found`}
               </p>
             </div>
 
             {loading ? (
               <div className="text-center py-12">
-                <p className="text-slate-400">Loading products...</p>
+                <p className="text-gray-400">Loading products...</p>
               </div>
             ) : products.length === 0 ? (
               <div className="text-center py-12">
-                <p className="text-slate-400">No products found. Try adjusting your filters.</p>
+                <p className="text-gray-400">No products found. Try adjusting your filters.</p>
               </div>
             ) : (
               <>
                 <div className="grid-products mb-8">
                   {products.map((product) => (
-                    <div key={product.id} className="card group hover:border-amber-500 transition-all">
+                    <div key={product.id} className="card group hover:border-blue-300 hover:shadow-md transition-all">
                       <Link href={`/products/${product.part_number}`}>
-                        <h3 className="font-bold text-amber-400 mb-2 text-sm group-hover:text-amber-300 transition-colors">
+                        <h3 className="font-semibold text-blue-600 mb-2 text-sm group-hover:text-blue-700 transition-colors">
                           {product.part_number}
                         </h3>
-                        <p className="text-slate-300 text-sm mb-3 line-clamp-2">
+                        <p className="text-gray-600 text-sm mb-3 line-clamp-2">
                           {product.description}
                         </p>
                       </Link>
 
                       {product.material && (
-                        <p className="text-xs text-slate-400 mb-2">
+                        <p className="text-xs text-gray-400 mb-2">
                           {product.material} • {product.thread_spec || 'Standard'}
                         </p>
                       )}
 
-                      <div className="flex items-center justify-between pt-3 border-t border-slate-700">
-                        <span className="text-lg font-bold text-amber-400">
+                      <div className="flex items-center justify-between pt-3 border-t border-gray-100">
+                        <span className="text-lg font-bold text-blue-600">
                           ${product.retail_price.toFixed(2)}
                         </span>
                         <button
@@ -284,7 +284,7 @@ function ProductsContent() {
                       </Link>
                     )}
 
-                    <span className="text-slate-400">
+                    <span className="text-gray-500 px-4">
                       Page {pagination.page} of {pagination.pages}
                     </span>
 
@@ -312,7 +312,7 @@ function ProductsContent() {
 
 export default function ProductsPage() {
   return (
-    <Suspense fallback={<div className="bg-slate-900 min-h-screen py-8"><div className="max-w-7xl mx-auto px-4"><p className="text-slate-400">Loading...</p></div></div>}>
+    <Suspense fallback={<div className="min-h-screen py-8"><div className="max-w-7xl mx-auto px-4"><p className="text-gray-400">Loading...</p></div></div>}>
       <ProductsContent />
     </Suspense>
   )

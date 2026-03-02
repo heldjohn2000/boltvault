@@ -7,26 +7,26 @@ export default function Header() {
   const { totalItems } = useCart()
 
   return (
-    <header className="sticky top-0 z-50 bg-slate-800 border-b border-slate-700 shadow-lg">
+    <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-lg border-b border-gray-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2">
-            <div className="bg-amber-500 text-slate-900 font-bold text-xl px-3 py-1 rounded">
+          <Link href="/" className="flex items-center space-x-1.5">
+            <div className="bg-blue-600 text-white font-bold text-lg px-2.5 py-0.5 rounded-md">
               BOLT
             </div>
-            <span className="font-bold text-xl text-amber-400">VAULT</span>
+            <span className="font-bold text-lg text-gray-900">VAULT</span>
           </Link>
 
           {/* Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            <Link href="/products" className="hover:text-amber-400 transition-colors">
+            <Link href="/products" className="text-gray-600 hover:text-blue-600 font-medium text-sm transition-colors">
               Products
             </Link>
-            <Link href="/categories" className="hover:text-amber-400 transition-colors">
+            <Link href="/categories" className="text-gray-600 hover:text-blue-600 font-medium text-sm transition-colors">
               Categories
             </Link>
-            <Link href="/api-docs" className="hover:text-amber-400 transition-colors">
+            <Link href="/api-docs" className="text-gray-600 hover:text-blue-600 font-medium text-sm transition-colors">
               API Docs
             </Link>
           </nav>
@@ -34,10 +34,10 @@ export default function Header() {
           {/* Cart Icon */}
           <Link
             href="/cart"
-            className="flex items-center space-x-2 px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg transition-colors"
+            className="flex items-center space-x-2 px-3.5 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
           >
             <svg
-              className="w-6 h-6"
+              className="w-5 h-5 text-gray-700"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -50,7 +50,7 @@ export default function Header() {
               />
             </svg>
             {totalItems > 0 && (
-              <span className="bg-amber-500 text-slate-900 text-xs font-bold px-2 py-1 rounded-full">
+              <span className="bg-blue-600 text-white text-xs font-bold px-2 py-0.5 rounded-full">
                 {totalItems}
               </span>
             )}

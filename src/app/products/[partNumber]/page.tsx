@@ -53,9 +53,9 @@ export default function ProductDetailPage() {
 
   if (loading) {
     return (
-      <div className="bg-slate-900 min-h-screen py-8">
+      <div className="min-h-screen py-8">
         <div className="max-w-7xl mx-auto px-4">
-          <p className="text-slate-400">Loading product...</p>
+          <p className="text-gray-400">Loading product...</p>
         </div>
       </div>
     )
@@ -63,9 +63,9 @@ export default function ProductDetailPage() {
 
   if (!product) {
     return (
-      <div className="bg-slate-900 min-h-screen py-8">
+      <div className="min-h-screen py-8">
         <div className="max-w-7xl mx-auto px-4">
-          <p className="text-slate-400">Product not found</p>
+          <p className="text-gray-400">Product not found</p>
         </div>
       </div>
     )
@@ -87,68 +87,67 @@ export default function ProductDetailPage() {
   }
 
   return (
-    <div className="bg-slate-900 min-h-screen py-8">
+    <div className="min-h-screen py-8">
       <div className="max-w-7xl mx-auto px-4">
-        <div className="mb-8 flex items-center space-x-2 text-sm text-slate-400">
-          <Link href="/products" className="hover:text-amber-400">
+        <div className="mb-8 flex items-center space-x-2 text-sm text-gray-400">
+          <Link href="/products" className="hover:text-blue-600">
             Products
           </Link>
           <span>/</span>
-          <span className="text-amber-400">{product.part_number}</span>
+          <span className="text-gray-900 font-medium">{product.part_number}</span>
         </div>
 
         <div className="grid md:grid-cols-3 gap-8 mb-12">
           <div className="md:col-span-1">
-            <div className="bg-slate-800 rounded-lg h-80 flex items-center justify-center border border-slate-700">
-              <span className="text-slate-500">Product Image</span>
+            <div className="bg-white rounded-xl h-80 flex items-center justify-center border border-gray-200 shadow-sm">
+              <svg className="w-20 h-20 text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+              </svg>
             </div>
           </div>
 
           <div className="md:col-span-2">
-            <h1 className="text-3xl font-bold text-amber-400 mb-4">{product.part_number}</h1>
-            <p className="text-xl text-slate-300 mb-6">{product.description}</p>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">{product.part_number}</h1>
+            <p className="text-lg text-gray-600 mb-6">{product.description}</p>
 
-            <div className="card mb-8">
-              <h2 className="text-lg font-bold text-slate-100 mb-4">Specifications</h2>
-              <div className="space-y-3">
-                <div className="flex justify-between py-2 border-b border-slate-700">
-                  <span className="text-slate-400">Material</span>
-                  <span className="text-slate-100">{product.material || 'Standard'}</span>
+            <div className="card mb-6">
+              <h2 className="text-base font-semibold text-gray-900 mb-4">Specifications</h2>
+              <div className="space-y-0">
+                <div className="flex justify-between py-3 border-b border-gray-100">
+                  <span className="text-gray-500 text-sm">Material</span>
+                  <span className="text-gray-900 text-sm font-medium">{product.material || 'Standard'}</span>
                 </div>
-                <div className="flex justify-between py-2 border-b border-slate-700">
-                  <span className="text-slate-400">Thread Spec</span>
-                  <span className="text-slate-100">{product.thread_spec || 'Standard'}</span>
+                <div className="flex justify-between py-3 border-b border-gray-100">
+                  <span className="text-gray-500 text-sm">Thread Spec</span>
+                  <span className="text-gray-900 text-sm font-medium">{product.thread_spec || 'Standard'}</span>
                 </div>
                 {product.diameter && (
-                  <div className="flex justify-between py-2 border-b border-slate-700">
-                    <span className="text-slate-400">Diameter</span>
-                    <span className="text-slate-100">{product.diameter}"</span>
+                  <div className="flex justify-between py-3 border-b border-gray-100">
+                    <span className="text-gray-500 text-sm">Diameter</span>
+                    <span className="text-gray-900 text-sm font-medium">{product.diameter}"</span>
                   </div>
                 )}
                 {product.length && (
-                  <div className="flex justify-between py-2 border-b border-slate-700">
-                    <span className="text-slate-400">Length</span>
-                    <span className="text-slate-100">{product.length}"</span>
+                  <div className="flex justify-between py-3">
+                    <span className="text-gray-500 text-sm">Length</span>
+                    <span className="text-gray-900 text-sm font-medium">{product.length}"</span>
                   </div>
                 )}
               </div>
             </div>
 
-            <div className="card mb-8">
-              <h2 className="text-lg font-bold text-slate-100 mb-4">Pricing</h2>
-              <div className="space-y-3">
-                <div className="flex justify-between items-center py-2 border-b border-slate-700">
-                  <span className="text-slate-400">Unit Price</span>
-                  <span className="text-2xl font-bold text-amber-400">
-                    ${product.retail_price.toFixed(2)}
-                  </span>
-                </div>
+            <div className="card mb-6">
+              <div className="flex items-center justify-between">
+                <span className="text-gray-500 text-sm">Unit Price</span>
+                <span className="text-3xl font-bold text-blue-600">
+                  ${product.retail_price.toFixed(2)}
+                </span>
               </div>
             </div>
 
             <div className="space-y-4">
               <div className="flex items-center space-x-4">
-                <label className="text-slate-300">Quantity:</label>
+                <label className="text-gray-600 text-sm">Quantity:</label>
                 <input
                   type="number"
                   min="1"
@@ -161,7 +160,7 @@ export default function ProductDetailPage() {
               <div className="flex items-center space-x-4">
                 <button
                   onClick={handleAddToCart}
-                  className="btn btn-primary px-8 py-3 text-lg flex-grow"
+                  className="btn btn-primary px-8 py-3 text-base flex-grow"
                 >
                   Add to Cart
                 </button>
@@ -175,22 +174,22 @@ export default function ProductDetailPage() {
 
         {relatedProducts.length > 0 && (
           <section className="mt-16">
-            <h2 className="text-3xl font-bold text-slate-100 mb-8">Related Products</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <h2 className="text-2xl font-semibold text-gray-900 mb-8">Related Products</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
               {relatedProducts.map((relProduct) => (
                 <Link
                   key={relProduct.id}
                   href={`/products/${relProduct.part_number}`}
-                  className="card group hover:border-amber-500 transition-all"
+                  className="card group hover:border-blue-300 hover:shadow-md transition-all"
                 >
-                  <h3 className="font-bold text-amber-400 mb-2 text-sm group-hover:text-amber-300">
+                  <h3 className="font-semibold text-blue-600 mb-2 text-sm group-hover:text-blue-700">
                     {relProduct.part_number}
                   </h3>
-                  <p className="text-slate-400 text-xs mb-3 line-clamp-2">
+                  <p className="text-gray-500 text-xs mb-3 line-clamp-2">
                     {relProduct.description}
                   </p>
-                  <div className="flex items-center justify-between pt-3 border-t border-slate-700">
-                    <span className="text-amber-400 font-bold">
+                  <div className="flex items-center justify-between pt-3 border-t border-gray-100">
+                    <span className="text-blue-600 font-bold">
                       ${relProduct.retail_price.toFixed(2)}
                     </span>
                   </div>

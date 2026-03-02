@@ -6,51 +6,54 @@ export default function ApiDocsPage() {
   const [activeTab, setActiveTab] = useState<'get-products' | 'create-order'>('get-products')
 
   return (
-    <div className="bg-slate-900 min-h-screen py-12">
+    <div className="min-h-screen py-12">
       <div className="max-w-5xl mx-auto px-4">
         <div className="mb-12">
-          <h1 className="text-4xl font-bold text-amber-400 mb-4">API Documentation</h1>
-          <p className="text-xl text-slate-400">
+          <div className="inline-block px-3 py-1 bg-blue-100 text-blue-700 text-xs font-semibold rounded-full mb-4">
+            DEVELOPER DOCS
+          </div>
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">API Documentation</h1>
+          <p className="text-lg text-gray-500">
             Integrate BoltVault into your application with our comprehensive REST API.
           </p>
         </div>
 
         {/* Authentication Section */}
-        <div className="card mb-12">
-          <h2 className="text-2xl font-bold text-slate-100 mb-6">Authentication</h2>
-          <p className="text-slate-300 mb-4">
-            All API requests require an API key passed as the <code className="bg-slate-700 px-2 py-1 rounded text-amber-400">X-API-Key</code> header:
+        <div className="card mb-8">
+          <h2 className="text-2xl font-semibold text-gray-900 mb-6">Authentication</h2>
+          <p className="text-gray-600 mb-4">
+            All API requests require an API key passed as the <code className="bg-gray-100 px-2 py-1 rounded text-blue-600 text-sm">X-API-Key</code> header:
           </p>
-          <div className="bg-slate-700 rounded p-4 overflow-x-auto">
-            <pre className="text-sm text-slate-300 font-mono">{`curl -H "X-API-Key: your-api-key-here" https://boltvault.com/api/products`}</pre>
+          <div className="bg-gray-900 rounded-lg p-4 overflow-x-auto">
+            <pre className="text-sm text-gray-300 font-mono">{`curl -H "X-API-Key: your-api-key-here" https://boltvault.com/api/products`}</pre>
           </div>
-          <p className="text-slate-400 text-sm mt-4">
+          <p className="text-gray-400 text-sm mt-4">
             Contact sales@boltvault.com to request an API key for your account.
           </p>
         </div>
 
         {/* Endpoints Section */}
-        <div className="card mb-12">
-          <h2 className="text-2xl font-bold text-slate-100 mb-8">Endpoints</h2>
+        <div className="card mb-8">
+          <h2 className="text-2xl font-semibold text-gray-900 mb-8">Endpoints</h2>
 
           {/* Tabs */}
-          <div className="flex space-x-4 mb-8 border-b border-slate-700">
+          <div className="flex space-x-1 mb-8 bg-gray-100 rounded-lg p-1 w-fit">
             <button
               onClick={() => setActiveTab('get-products')}
-              className={`pb-3 px-4 font-medium transition-colors ${
+              className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
                 activeTab === 'get-products'
-                  ? 'border-b-2 border-amber-500 text-amber-400'
-                  : 'text-slate-400 hover:text-slate-300'
+                  ? 'bg-white text-gray-900 shadow-sm'
+                  : 'text-gray-500 hover:text-gray-700'
               }`}
             >
               GET /api/products
             </button>
             <button
               onClick={() => setActiveTab('create-order')}
-              className={`pb-3 px-4 font-medium transition-colors ${
+              className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
                 activeTab === 'create-order'
-                  ? 'border-b-2 border-amber-500 text-amber-400'
-                  : 'text-slate-400 hover:text-slate-300'
+                  ? 'bg-white text-gray-900 shadow-sm'
+                  : 'text-gray-500 hover:text-gray-700'
               }`}
             >
               POST /api/orders
@@ -61,37 +64,37 @@ export default function ApiDocsPage() {
           {activeTab === 'get-products' && (
             <div className="space-y-6">
               <div>
-                <h3 className="text-lg font-bold text-amber-400 mb-3">
+                <h3 className="text-lg font-semibold text-gray-900 mb-3">
                   List Products
                 </h3>
-                <p className="text-slate-300 mb-4">
+                <p className="text-gray-600 mb-4">
                   Retrieve a paginated list of fasteners. Supports filtering by category, material, thread spec, and full-text search.
                 </p>
               </div>
 
               <div>
-                <h4 className="font-bold text-slate-100 mb-3">Request</h4>
-                <div className="bg-slate-700 rounded p-4 overflow-x-auto mb-4">
-                  <pre className="text-sm text-slate-300 font-mono">{`GET /api/products?search=socket&material=Steel&page=1&limit=50
+                <h4 className="font-semibold text-gray-900 mb-3 text-sm uppercase tracking-wide">Request</h4>
+                <div className="bg-gray-900 rounded-lg p-4 overflow-x-auto mb-4">
+                  <pre className="text-sm text-gray-300 font-mono">{`GET /api/products?search=socket&material=Steel&page=1&limit=50
 
 Headers:
 X-API-Key: your-api-key-here`}</pre>
                 </div>
-                <p className="text-slate-400 text-sm mb-3">Query Parameters:</p>
-                <ul className="text-slate-400 text-sm space-y-2 ml-4">
-                  <li><code className="text-amber-400">search</code> - Search by part number or description</li>
-                  <li><code className="text-amber-400">material</code> - Filter by material (e.g., Steel, Aluminum)</li>
-                  <li><code className="text-amber-400">thread</code> - Filter by thread spec (e.g., M6, #10-24)</li>
-                  <li><code className="text-amber-400">category</code> - Filter by category ID</li>
-                  <li><code className="text-amber-400">page</code> - Page number (default: 1)</li>
-                  <li><code className="text-amber-400">limit</code> - Results per page (default: 50, max: 100)</li>
-                </ul>
+                <p className="text-gray-500 text-sm mb-3">Query Parameters:</p>
+                <div className="space-y-2 ml-4">
+                  <p className="text-gray-600 text-sm"><code className="text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded">search</code> — Search by part number or description</p>
+                  <p className="text-gray-600 text-sm"><code className="text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded">material</code> — Filter by material (e.g., Steel, Aluminum)</p>
+                  <p className="text-gray-600 text-sm"><code className="text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded">thread</code> — Filter by thread spec (e.g., M6, #10-24)</p>
+                  <p className="text-gray-600 text-sm"><code className="text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded">category</code> — Filter by category ID</p>
+                  <p className="text-gray-600 text-sm"><code className="text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded">page</code> — Page number (default: 1)</p>
+                  <p className="text-gray-600 text-sm"><code className="text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded">limit</code> — Results per page (default: 50, max: 100)</p>
+                </div>
               </div>
 
               <div>
-                <h4 className="font-bold text-slate-100 mb-3">Response</h4>
-                <div className="bg-slate-700 rounded p-4 overflow-x-auto">
-                  <pre className="text-sm text-slate-300 font-mono">{`{
+                <h4 className="font-semibold text-gray-900 mb-3 text-sm uppercase tracking-wide">Response</h4>
+                <div className="bg-gray-900 rounded-lg p-4 overflow-x-auto">
+                  <pre className="text-sm text-gray-300 font-mono">{`{
   "products": [
     {
       "id": "550e8400-e29b-41d4-a716-446655440000",
@@ -119,18 +122,18 @@ X-API-Key: your-api-key-here`}</pre>
           {activeTab === 'create-order' && (
             <div className="space-y-6">
               <div>
-                <h3 className="text-lg font-bold text-amber-400 mb-3">
+                <h3 className="text-lg font-semibold text-gray-900 mb-3">
                   Create Order
                 </h3>
-                <p className="text-slate-300 mb-4">
+                <p className="text-gray-600 mb-4">
                   Create a new order programmatically. Requires a valid API key.
                 </p>
               </div>
 
               <div>
-                <h4 className="font-bold text-slate-100 mb-3">Request</h4>
-                <div className="bg-slate-700 rounded p-4 overflow-x-auto mb-4">
-                  <pre className="text-sm text-slate-300 font-mono">{`POST /api/orders
+                <h4 className="font-semibold text-gray-900 mb-3 text-sm uppercase tracking-wide">Request</h4>
+                <div className="bg-gray-900 rounded-lg p-4 overflow-x-auto mb-4">
+                  <pre className="text-sm text-gray-300 font-mono">{`POST /api/orders
 
 Headers:
 X-API-Key: your-api-key-here
@@ -163,9 +166,9 @@ Body:
               </div>
 
               <div>
-                <h4 className="font-bold text-slate-100 mb-3">Response</h4>
-                <div className="bg-slate-700 rounded p-4 overflow-x-auto">
-                  <pre className="text-sm text-slate-300 font-mono">{`{
+                <h4 className="font-semibold text-gray-900 mb-3 text-sm uppercase tracking-wide">Response</h4>
+                <div className="bg-gray-900 rounded-lg p-4 overflow-x-auto">
+                  <pre className="text-sm text-gray-300 font-mono">{`{
   "orderId": "order_1234567890",
   "status": "pending",
   "subtotal": 67.50,
@@ -194,15 +197,15 @@ Body:
         </div>
 
         {/* Code Examples Section */}
-        <div className="card mb-12">
-          <h2 className="text-2xl font-bold text-slate-100 mb-8">Code Examples</h2>
+        <div className="card mb-8">
+          <h2 className="text-2xl font-semibold text-gray-900 mb-8">Code Examples</h2>
 
           <div className="space-y-8">
             {/* JavaScript/TypeScript Example */}
             <div>
-              <h3 className="text-lg font-bold text-amber-400 mb-3">JavaScript/TypeScript</h3>
-              <div className="bg-slate-700 rounded p-4 overflow-x-auto">
-                <pre className="text-sm text-slate-300 font-mono">{`const apiKey = "your-api-key-here";
+              <h3 className="text-base font-semibold text-gray-900 mb-3">JavaScript / TypeScript</h3>
+              <div className="bg-gray-900 rounded-lg p-4 overflow-x-auto">
+                <pre className="text-sm text-gray-300 font-mono">{`const apiKey = "your-api-key-here";
 
 // Get products
 const productsResponse = await fetch(
@@ -243,9 +246,9 @@ const order = await orderResponse.json();`}</pre>
 
             {/* cURL Example */}
             <div>
-              <h3 className="text-lg font-bold text-amber-400 mb-3">cURL</h3>
-              <div className="bg-slate-700 rounded p-4 overflow-x-auto">
-                <pre className="text-sm text-slate-300 font-mono">{`# Get products
+              <h3 className="text-base font-semibold text-gray-900 mb-3">cURL</h3>
+              <div className="bg-gray-900 rounded-lg p-4 overflow-x-auto">
+                <pre className="text-sm text-gray-300 font-mono">{`# Get products
 curl -X GET \\
   'https://boltvault.com/api/products?search=socket&limit=10' \\
   -H 'X-API-Key: your-api-key-here'
@@ -273,9 +276,9 @@ curl -X POST \\
 
             {/* Python Example */}
             <div>
-              <h3 className="text-lg font-bold text-amber-400 mb-3">Python</h3>
-              <div className="bg-slate-700 rounded p-4 overflow-x-auto">
-                <pre className="text-sm text-slate-300 font-mono">{`import requests
+              <h3 className="text-base font-semibold text-gray-900 mb-3">Python</h3>
+              <div className="bg-gray-900 rounded-lg p-4 overflow-x-auto">
+                <pre className="text-sm text-gray-300 font-mono">{`import requests
 
 api_key = "your-api-key-here"
 headers = {"X-API-Key": api_key}
@@ -315,34 +318,34 @@ order = response.json()`}</pre>
 
         {/* Error Handling Section */}
         <div className="card">
-          <h2 className="text-2xl font-bold text-slate-100 mb-6">Error Responses</h2>
-          <div className="space-y-4">
-            <div className="flex gap-4 pb-4 border-b border-slate-700">
-              <div className="font-mono text-red-400 font-bold flex-shrink-0">400</div>
+          <h2 className="text-2xl font-semibold text-gray-900 mb-6">Error Responses</h2>
+          <div className="space-y-0">
+            <div className="flex gap-4 py-4 border-b border-gray-100">
+              <div className="font-mono text-red-500 font-bold flex-shrink-0 text-sm">400</div>
               <div>
-                <p className="font-bold text-slate-100">Bad Request</p>
-                <p className="text-slate-400 text-sm">Invalid request parameters or missing required fields</p>
+                <p className="font-semibold text-gray-900 text-sm">Bad Request</p>
+                <p className="text-gray-500 text-sm">Invalid request parameters or missing required fields</p>
               </div>
             </div>
-            <div className="flex gap-4 pb-4 border-b border-slate-700">
-              <div className="font-mono text-red-400 font-bold flex-shrink-0">401</div>
+            <div className="flex gap-4 py-4 border-b border-gray-100">
+              <div className="font-mono text-red-500 font-bold flex-shrink-0 text-sm">401</div>
               <div>
-                <p className="font-bold text-slate-100">Unauthorized</p>
-                <p className="text-slate-400 text-sm">Missing or invalid API key</p>
+                <p className="font-semibold text-gray-900 text-sm">Unauthorized</p>
+                <p className="text-gray-500 text-sm">Missing or invalid API key</p>
               </div>
             </div>
-            <div className="flex gap-4 pb-4 border-b border-slate-700">
-              <div className="font-mono text-red-400 font-bold flex-shrink-0">404</div>
+            <div className="flex gap-4 py-4 border-b border-gray-100">
+              <div className="font-mono text-red-500 font-bold flex-shrink-0 text-sm">404</div>
               <div>
-                <p className="font-bold text-slate-100">Not Found</p>
-                <p className="text-slate-400 text-sm">Product or resource not found</p>
+                <p className="font-semibold text-gray-900 text-sm">Not Found</p>
+                <p className="text-gray-500 text-sm">Product or resource not found</p>
               </div>
             </div>
-            <div className="flex gap-4 pb-4">
-              <div className="font-mono text-red-400 font-bold flex-shrink-0">500</div>
+            <div className="flex gap-4 py-4">
+              <div className="font-mono text-red-500 font-bold flex-shrink-0 text-sm">500</div>
               <div>
-                <p className="font-bold text-slate-100">Internal Server Error</p>
-                <p className="text-slate-400 text-sm">Server-side error processing your request</p>
+                <p className="font-semibold text-gray-900 text-sm">Internal Server Error</p>
+                <p className="text-gray-500 text-sm">Server-side error processing your request</p>
               </div>
             </div>
           </div>

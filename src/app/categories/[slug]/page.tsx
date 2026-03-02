@@ -68,9 +68,9 @@ export default function CategoryPage() {
 
   if (loading) {
     return (
-      <div className="bg-slate-900 min-h-screen py-8">
+      <div className="min-h-screen py-8">
         <div className="max-w-7xl mx-auto px-4">
-          <p className="text-slate-400">Loading category...</p>
+          <p className="text-gray-400">Loading category...</p>
         </div>
       </div>
     )
@@ -78,31 +78,31 @@ export default function CategoryPage() {
 
   if (!category) {
     return (
-      <div className="bg-slate-900 min-h-screen py-8">
+      <div className="min-h-screen py-8">
         <div className="max-w-7xl mx-auto px-4">
-          <p className="text-slate-400">Category not found</p>
+          <p className="text-gray-400">Category not found</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="bg-slate-900 min-h-screen py-8">
+    <div className="min-h-screen py-8">
       <div className="max-w-7xl mx-auto px-4">
         <div className="mb-8">
-          <Link href="/" className="text-slate-400 hover:text-amber-400 mb-4 inline-block">
-            Home
+          <Link href="/" className="text-gray-400 hover:text-blue-600 mb-4 inline-block text-sm">
+            ← Back to Home
           </Link>
-          <h1 className="text-4xl font-bold text-amber-400 mb-2">{category.name}</h1>
-          <p className="text-slate-400">{category.description}</p>
+          <h1 className="text-4xl font-bold text-gray-900 mb-2">{category.name}</h1>
+          <p className="text-gray-500">{category.description}</p>
         </div>
 
         {families.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-slate-400">No product families in this category</p>
+            <p className="text-gray-400">No product families in this category</p>
           </div>
         ) : (
-          <div className="space-y-6">
+          <div className="space-y-4">
             {families.map((item) => (
               <div key={item.family.id} className="card">
                 <button
@@ -115,34 +115,34 @@ export default function CategoryPage() {
                 >
                   <div className="flex items-center justify-between">
                     <div>
-                      <h2 className="text-xl font-bold text-amber-400 mb-2">
+                      <h2 className="text-xl font-semibold text-gray-900 mb-1">
                         {item.family.name}
                       </h2>
-                      <p className="text-slate-400 text-sm">{item.family.description}</p>
+                      <p className="text-gray-500 text-sm">{item.family.description}</p>
                     </div>
-                    <span className="text-2xl text-slate-500">
+                    <span className="text-xl text-gray-400 flex-shrink-0 ml-4">
                       {expandedFamily === item.family.id ? '▼' : '▶'}
                     </span>
                   </div>
                 </button>
 
                 {expandedFamily === item.family.id && (
-                  <div className="mt-6 pt-6 border-t border-slate-700">
+                  <div className="mt-6 pt-6 border-t border-gray-200">
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                       {item.products.map((product) => (
                         <Link
                           key={product.id}
                           href={`/products/${product.part_number}`}
-                          className="p-4 bg-slate-700/50 rounded hover:bg-slate-600 transition-colors border border-slate-600 hover:border-amber-500"
+                          className="p-4 bg-gray-50 rounded-lg hover:bg-blue-50 transition-colors border border-gray-200 hover:border-blue-300"
                         >
-                          <h3 className="font-bold text-amber-400 text-sm mb-1">
+                          <h3 className="font-semibold text-blue-600 text-sm mb-1">
                             {product.part_number}
                           </h3>
-                          <p className="text-slate-300 text-xs mb-3 line-clamp-2">
+                          <p className="text-gray-600 text-xs mb-3 line-clamp-2">
                             {product.description}
                           </p>
                           <div className="flex items-center justify-between">
-                            <span className="text-amber-400 font-bold">
+                            <span className="text-blue-600 font-bold">
                               ${product.retail_price.toFixed(2)}
                             </span>
                           </div>

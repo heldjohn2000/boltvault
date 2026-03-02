@@ -12,11 +12,11 @@ export default function CartPage() {
 
   if (items.length === 0) {
     return (
-      <div className="bg-slate-900 min-h-screen py-12">
+      <div className="min-h-screen py-12">
         <div className="max-w-4xl mx-auto px-4">
-          <h1 className="text-3xl font-bold text-slate-100 mb-8">Shopping Cart</h1>
+          <h1 className="text-3xl font-semibold text-gray-900 mb-8">Shopping Cart</h1>
           <div className="card text-center py-12">
-            <p className="text-slate-400 mb-6">Your cart is empty</p>
+            <p className="text-gray-400 mb-6">Your cart is empty</p>
             <Link href="/products" className="btn btn-primary">
               Continue Shopping
             </Link>
@@ -27,9 +27,9 @@ export default function CartPage() {
   }
 
   return (
-    <div className="bg-slate-900 min-h-screen py-8">
+    <div className="min-h-screen py-8">
       <div className="max-w-7xl mx-auto px-4">
-        <h1 className="text-3xl font-bold text-slate-100 mb-8">Shopping Cart</h1>
+        <h1 className="text-3xl font-semibold text-gray-900 mb-8">Shopping Cart</h1>
 
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Cart Items */}
@@ -38,11 +38,11 @@ export default function CartPage() {
               {items.map((item) => (
                 <div key={item.id} className="card flex gap-4">
                   <div className="flex-grow">
-                    <h3 className="font-bold text-amber-400 mb-2">{item.part_number}</h3>
-                    <p className="text-slate-400 text-sm mb-3">{item.description}</p>
+                    <h3 className="font-semibold text-gray-900 mb-2">{item.part_number}</h3>
+                    <p className="text-gray-500 text-sm mb-3">{item.description}</p>
                     <div className="flex items-center space-x-4">
                       <div className="flex items-center space-x-2">
-                        <label className="text-slate-400 text-sm">Qty:</label>
+                        <label className="text-gray-500 text-sm">Qty:</label>
                         <input
                           type="number"
                           min="1"
@@ -56,14 +56,14 @@ export default function CartPage() {
                           className="input-field w-20"
                         />
                       </div>
-                      <span className="text-slate-400 text-sm">
+                      <span className="text-gray-700 text-sm font-medium">
                         ${(item.retail_price * item.quantity).toFixed(2)}
                       </span>
                     </div>
                   </div>
                   <button
                     onClick={() => removeItem(item.product_id)}
-                    className="btn btn-ghost text-red-400 hover:text-red-300"
+                    className="btn btn-ghost text-red-500 hover:text-red-600 hover:bg-red-50"
                   >
                     Remove
                   </button>
@@ -81,24 +81,24 @@ export default function CartPage() {
           {/* Order Summary */}
           <div className="lg:col-span-1">
             <div className="card sticky top-20">
-              <h2 className="text-xl font-bold text-slate-100 mb-6">Order Summary</h2>
+              <h2 className="text-xl font-semibold text-gray-900 mb-6">Order Summary</h2>
 
-              <div className="space-y-3 mb-6 pb-6 border-b border-slate-700">
-                <div className="flex justify-between text-slate-300">
+              <div className="space-y-3 mb-6 pb-6 border-b border-gray-200">
+                <div className="flex justify-between text-gray-600">
                   <span>Subtotal</span>
                   <span>${subtotal.toFixed(2)}</span>
                 </div>
-                <div className="flex justify-between text-slate-300">
+                <div className="flex justify-between text-gray-600">
                   <span>Shipping</span>
                   <span>${shipping.toFixed(2)}</span>
                 </div>
-                <div className="flex justify-between text-slate-300">
+                <div className="flex justify-between text-gray-600">
                   <span>Tax (8%)</span>
                   <span>${tax.toFixed(2)}</span>
                 </div>
               </div>
 
-              <div className="flex justify-between text-xl font-bold text-amber-400 mb-6">
+              <div className="flex justify-between text-xl font-bold text-gray-900 mb-6">
                 <span>Total</span>
                 <span>${total.toFixed(2)}</span>
               </div>
